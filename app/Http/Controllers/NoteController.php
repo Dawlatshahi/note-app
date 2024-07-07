@@ -48,6 +48,9 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
+        if ($note->user_id !== request()->user()->id) {
+            abort(403, 'Unauthorized');
+        }
         return view('note.show', ['note' => $note]);
     }
 
@@ -56,6 +59,9 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
+        if ($note->user_id !== request()->user()->id) {
+            abort(403, 'Unauthorized');
+        }
         return view('note.edit', ['note' => $note]);
     }
 
@@ -64,6 +70,9 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
+        if ($note->user_id !== request()->user()->id) {
+            abort(403, 'Unauthorized');
+        }
           $data = $request->validate([
             'note' => 'required', 'string',
         ]);
@@ -78,7 +87,11 @@ class NoteController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Note $note)
+
     {
+        if ($note->user_id !== request()->user()->id) {
+            abort(403, 'Unauthorized');
+        }
         $note->delete();
 
         return to_route('note.index')->with('message', 'Note deleted successfully');
